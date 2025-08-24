@@ -35,8 +35,21 @@ body {
 }
 
 .btn-black {
-    background: black;
-    color: white;
+    background: black !important;
+    color: white !important;
+}
+
+.btn-outline-black {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+}
+
+.btn-outline-black:hover,
+.btn-outline-black:active,
+.btn-outline-black:focus {
+    background: black !important;
+    color: white !important;
 }
 
 .shop-now-button:hover,
@@ -87,6 +100,8 @@ a.category-badge > span.badge:hover {
 .btt-link {
     cursor: pointer;
 }
+
+
 
 /* -------------------------------- Media Queries */
 
