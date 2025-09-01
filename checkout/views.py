@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponse
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
 
@@ -8,7 +9,25 @@ from products.models import Product
 from bag.contexts import bag_contents
 
 import stripe
+import json
 # Create your views here.
+
+
+@require_POST
+def cache_checkout_data(request):
+    try:
+        pid = request.POST.get('client_secret').split('_secret')[0]
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.PaymentIntent.modify(pid, metadata={
+            'bag': json.dumps(request.session.get('bag', {})),
+            'save_info': request.POST.get('save_info'),
+            'username': request.user,
+        })
+        return HttpResponse(status=200)
+    except Exception as e:
+        messages.error(request, 'Sorry, your payment cannot be \
+                       processed right now, please try again later.')
+        return HttpResponse(content=e, status=400)
 
 
 def checkout(request):
@@ -58,6 +77,7 @@ def checkout(request):
                     ))
                     order.delete()
                     return redirect(reverse('view_bag'))
+                
             request.session['save_info'] = 'save-info' in request.POST
             return redirect(reverse('checkout_success', args=[order.order_number]))
         else:
@@ -84,7 +104,7 @@ def checkout(request):
             messages.warning(request, 'Stripe public key is missing. \
                             Did you forget to set it in your environment?')
 
-        template = 'checkout/checkout.html'
+        template = 'checkout/checkout.html/'
         context = {
             'order_form': order_form,
             'stripe_public_key': stripe_public_key,
@@ -93,6 +113,7 @@ def checkout(request):
 
         return render(request, template, context)
     
+
 def checkout_success(request, order_number):
     """
     Handle successful checkouts
