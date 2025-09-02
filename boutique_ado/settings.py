@@ -139,6 +139,9 @@ else:
         }
     }
 
+# DATABASES = {
+#     'default': dj_database_url.parse('postgresql://neondb_owner:npg_gn2Xh8ytQiFY@ep-wispy-star-a2lcoa9d.eu-central-1.aws.neon.tech/cod_crop_widen_341875')
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
