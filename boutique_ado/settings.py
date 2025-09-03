@@ -88,8 +88,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'allauth.accounts.context_processors.account',
-                'allauth.socialaccount.context_processors.socialaccount',
                 'bag.contexts.bag_contents',
             ],
             'builtins': [
